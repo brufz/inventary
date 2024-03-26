@@ -9,6 +9,8 @@ import br.com.ecommerce.inventario.service.mapper.ProductMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class ProductServiceImpl implements ProductService {
     @Autowired
@@ -16,14 +18,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductModel create(ProductModelDto productDto) {
-//        ProductMapper.INSTANCE.toEntity(productDto);
-        var productModel = ProductModel.builder()
-                .name(productDto.getName())
-                .description(productDto.getDescription())
-                .category(EnumCategory.getCategory(productDto.getCategory()))
-                .price(productDto.getPrice())
-                .quantity(productDto.getQuantity())
-                .build();
+        var productModel = ProductMapper.INSTANCE.toEntity(productDto);
         return productRepository.save(productModel);
     }
 
@@ -33,7 +28,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public ProductModel getByCategory(String categoria) {
-        return null;
+    public List<ProductModel> getByCategory(String categoria) {
+        EnumCategory enumCategory = EnumCategory.getCategory(categoria);
+        List<ProductModel> categoryList = productRepository.findByCategory(enumCategory);
+        if(categoryList.isEmpty()){
+            throw new RuntimeException("Nenhum produto encontrado nesta categoria");
+        }
+        return categoryList;
     }
 }

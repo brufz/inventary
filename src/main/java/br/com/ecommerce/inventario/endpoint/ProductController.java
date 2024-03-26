@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/produto")
 public class ProductController {
@@ -33,7 +35,7 @@ public class ProductController {
     }
 
     @GetMapping("/categoria/{categoria}")
-    public ResponseEntity<ProductModel> getByCategory(@PathVariable("categoria") String categoria) {
+    public ResponseEntity<List<ProductModel>> getByCategory(@PathVariable("categoria") String categoria) {
         var produto = productService.getByCategory(categoria);
         return new ResponseEntity<>(produto, HttpStatus.OK);
     }

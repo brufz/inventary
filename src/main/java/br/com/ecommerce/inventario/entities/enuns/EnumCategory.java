@@ -1,4 +1,6 @@
-package br.com.ecommerce.inventario.model.enuns;
+package br.com.ecommerce.inventario.entities.enuns;
+
+import br.com.ecommerce.inventario.usecase.exception.NotFoundException;
 
 import java.util.Arrays;
 
@@ -19,6 +21,6 @@ public enum EnumCategory {
         return Arrays.stream(values())
                 .filter(type -> type.name().equalsIgnoreCase(category))
                 .findAny()
-                .orElseThrow(() -> new IllegalArgumentException("Categoria não encontrada"));
+                .orElseThrow(() -> new NotFoundException("Categoria não encontrada"));
     }
 }

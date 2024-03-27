@@ -1,8 +1,8 @@
-package br.com.ecommerce.inventario.service.mapper;
+package br.com.ecommerce.inventario.usecase.mapper;
 
-import br.com.ecommerce.inventario.model.ProductModel;
-import br.com.ecommerce.inventario.model.ProductModelDto;
-import br.com.ecommerce.inventario.model.enuns.EnumCategory;
+import br.com.ecommerce.inventario.entities.model.ProductModel;
+import br.com.ecommerce.inventario.entities.dto.ProductModelDto;
+import br.com.ecommerce.inventario.entities.enuns.EnumCategory;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;

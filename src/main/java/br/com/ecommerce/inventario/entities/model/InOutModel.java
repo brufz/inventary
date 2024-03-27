@@ -1,42 +1,44 @@
-package br.com.ecommerce.inventario.model;
+package br.com.ecommerce.inventario.entities.model;
 
-import br.com.ecommerce.inventario.model.enuns.EnumCategory;
+import br.com.ecommerce.inventario.entities.enuns.EnumType;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.Table;
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Builder
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "tb_produto")
-public class ProductModel {
+@Builder
+@Table(name = "tb_movimentacao")
+public class InOutModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank
-    @JsonProperty("nome")
-    private String name;
-    @NotBlank
-    @JsonProperty("descricao")
-    private String description;
+
     @NotNull
-    @JsonProperty("categoria")
-    private EnumCategory category;
-    @NotNull
-    @JsonProperty("preco")
-    private Double price;
+    @Column(name = "product_id", updatable = false)
+    @JsonProperty("produtoId")
+    private Long productId;
+
     @NotNull
     @JsonProperty("quantidade")
     private Integer quantity;
+
+    @NotNull
+    @JsonProperty("tipo")
+    @Column(name="type_mov")
+    @Pattern(regexp = "ENTRADA|SAIDA")
+    private String typeMov;
 }

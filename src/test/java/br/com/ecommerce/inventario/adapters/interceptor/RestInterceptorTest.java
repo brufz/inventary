@@ -1,74 +1,44 @@
 package br.com.ecommerce.inventario.adapters.interceptor;
 
+import br.com.ecommerce.inventario.usecase.TokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
-import java.lang.reflect.Method;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class RestInterceptorTest {
-//
-//     @Test
-//      void testPreHandle() throws Exception {
-//
-//         RestInterceptor restInterceptor = new RestInterceptor();
-//         // Arrange
-//         HttpServletRequest request = mock(HttpServletRequest.class);
-//
-//         HttpServletResponse response = mock(HttpServletResponse.class);
-//         Object handler = new Object();
-//         RestInterceptor restInterceptor = new RestInterceptor();
-//         // Act
-//         boolean actualPreHandleResult = restInterceptor.preHandle(request, response, handler);
-//         // Assert
-//         assertTrue(actualPreHandleResult);
-//         verify(request).getHeader("Authorization");
-//     }
-    // @Test
-    // public void testPreHandle2() {
-    //     // Arrange
-    //     HttpServletRequest request = mock(HttpServletRequest.class);
-    //     HttpServletResponse response = mock(HttpServletResponse.class);
-    //     Object handler = new Object();
-    //     RestInterceptor restInterceptor = new RestInterceptor();
-    //     // Act
-    //     boolean actualPreHandleResult = restInterceptor.preHandle(request, response, handler);
-    //     // Assert
-    //     assertTrue(actualPreHandleResult);
-    //     verify(request).getHeader("Authorization");
-    // }
-    // @Test
-    // public void testPreHandle3() {
-    //     // Arrange
-    //     HttpServletRequest request = mock(HttpServletRequest.class);
-    //     HttpServletResponse response = mock(HttpServletResponse.class);
-    //     Object handler = new Object();
-    //     RestInterceptor restInterceptor = new RestInterceptor();
-    //     // Act
-    //     boolean actualPreHandleResult = restInterceptor.preHandle(request, response, handler);
-    //     // Assert
-    //     assertTrue(actualPreHandleResult);
-    //     verify(request).getHeader("Authorization");
-    // }
-    // @Test
-    // public void testPreHandle4() {
-    //     // Arrange
-    //     HttpServletRequest request = mock(HttpServletRequest.class);
-    //     HttpServletResponse response = mock(HttpServletResponse.class);
-    //     Object handler = new Object();
-    //     RestInterceptor restInterceptor = new RestInterceptor();
-    //     // Act
-    //     boolean actualPreHandleResult = restInterceptor.preHandle(request, response, handler);
-    //     // Assert
-    //     assertTrue(actualPreHandleResult);
-    //     verify(request).getHeader("Authorization");
-    // }
-    // @Test
-    // public void testPreHandle5() {
-    //     // Arrange
-    //     HttpServletRequest request = mock(HttpServletRequest.class); // Line 1
+
+    @Mock
+    private HttpServletRequest request;
+
+    @Mock
+    private HttpServletResponse response;
+
+    @Mock
+    TokenService tokenService;
+
+    @InjectMocks
+    RestInterceptor restInterceptor;
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+     @Test
+     void testPreHandle2() throws Exception {
+        String token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.yCdPVMPz5eIv_oZ4Js08DhLE4BoOuuXLOnKm6YIsN6A";
+        when(request.getHeader("Authorization")).thenReturn(token);
+        restInterceptor.preHandle(request, response, null);
+        verify(tokenService).validateToken(token);
+     }
+
 }

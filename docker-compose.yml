@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  app:
+    build: .
+    depends_on:
+      - sqlserver
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server
+    environment:
+      SA_PASSWORD: "4123Qwe!"
+      ACCEPT_EULA: "Y"
+    ports:
+      - "1434:1433"

@@ -13,6 +13,9 @@ public class RestInterceptor implements HandlerInterceptor {
     TokenService tokenService;
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            return true;
+        }
         String token = request.getHeader("Authorization");
         tokenService.validateToken(token);
         return HandlerInterceptor.super.preHandle(request, response, handler);

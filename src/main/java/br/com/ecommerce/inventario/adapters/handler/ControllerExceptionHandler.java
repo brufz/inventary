@@ -1,6 +1,7 @@
 package br.com.ecommerce.inventario.adapters.handler;
 
 import br.com.ecommerce.inventario.usecase.exception.BadRequestException;
+import br.com.ecommerce.inventario.usecase.exception.ForbiddenException;
 import br.com.ecommerce.inventario.usecase.exception.InternalServerErrorException;
 import br.com.ecommerce.inventario.usecase.exception.InvalidTokenException;
 import br.com.ecommerce.inventario.usecase.exception.NotFoundException;
@@ -16,11 +17,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static br.com.ecommerce.inventario.utils.Constants.MENSAGEM;
+import static br.com.ecommerce.inventario.utils.Constants.VALIDACOES;
+
 @ControllerAdvice
 public class ControllerExceptionHandler {
-
-    public static final String MENSAGEM = "mensagem";
-    public static final String VALIDACOES = "validacoes";
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<Object> handleNotFoundException(NotFoundException ex, WebRequest request) {
@@ -38,6 +39,12 @@ public class ControllerExceptionHandler {
     public ResponseEntity<Object> handleTokenException(InvalidTokenException ex, WebRequest request) {
         Map<String, String> body = configException(MENSAGEM, ex.getMessage());
         return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(ForbiddenException.class)
+    public ResponseEntity<Object> handleForbiddenException(ForbiddenException ex, WebRequest request) {
+        Map<String, String> body = configException(MENSAGEM, ex.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.FORBIDDEN);
     }
 
     @ExceptionHandler(InternalServerErrorException.class)

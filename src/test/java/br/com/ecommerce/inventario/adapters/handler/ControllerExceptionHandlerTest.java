@@ -1,7 +1,9 @@
 package br.com.ecommerce.inventario.adapters.handler;
 
 import br.com.ecommerce.inventario.usecase.exception.BadRequestException;
+import br.com.ecommerce.inventario.usecase.exception.ForbiddenException;
 import br.com.ecommerce.inventario.usecase.exception.InternalServerErrorException;
+import br.com.ecommerce.inventario.usecase.exception.InvalidTokenException;
 import br.com.ecommerce.inventario.usecase.exception.NotFoundException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,6 +43,20 @@ class ControllerExceptionHandlerTest {
         NotFoundException exception = new NotFoundException("Not found");
         ResponseEntity<Object> responseEntity = customExceptionHandler.handleNotFoundException(exception, webRequest);
         assertEquals(404, responseEntity.getStatusCodeValue());
+    }
+
+    @Test
+    void testHandleForbiddenException() {
+        ForbiddenException exception = new ForbiddenException("Forbidden");
+        ResponseEntity<Object> responseEntity = customExceptionHandler.handleForbiddenException(exception, webRequest);
+        assertEquals(403, responseEntity.getStatusCodeValue());
+    }
+
+    @Test
+    void testHandleInvalidTokenException() {
+        InvalidTokenException exception = new InvalidTokenException("Forbidden");
+        ResponseEntity<Object> responseEntity = customExceptionHandler.handleTokenException(exception, webRequest);
+        assertEquals(401, responseEntity.getStatusCodeValue());
     }
 
     @Test

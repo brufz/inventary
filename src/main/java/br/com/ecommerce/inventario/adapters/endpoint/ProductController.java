@@ -9,7 +9,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,21 +25,30 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static br.com.ecommerce.inventario.utils.Constants.AUTHORIZATION;
+import static br.com.ecommerce.inventario.utils.Constants.CODE_200_STRING;
+import static br.com.ecommerce.inventario.utils.Constants.CODE_201_STRING;
+import static br.com.ecommerce.inventario.utils.Constants.CODE_400_STRING;
+import static br.com.ecommerce.inventario.utils.Constants.CODE_500_STRING;
+import static br.com.ecommerce.inventario.utils.Constants.DESCRIPTION_400;
+import static br.com.ecommerce.inventario.utils.Constants.DESCRIPTION_500;
+
 @RestController
 @RequestMapping(value = "/produto", produces = "application/json", headers = "Accept=*/*")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
 public class ProductController {
+
     private final ProductService productService;
 
-    @GetMapping()
+    @GetMapping
     @Operation(summary = "Obtém todos os produtos do estoque")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Busca de produtos  feita com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Erro na requisição", content = @Content(schema = @Schema(implementation = PayloadError.class))),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(schema = @Schema(implementation = PayloadError.class)))
+            @ApiResponse(responseCode = CODE_200_STRING, description = "Busca de produtos  feita com sucesso"),
+            @ApiResponse(responseCode = CODE_400_STRING, description = DESCRIPTION_400, content = @Content(schema = @Schema(implementation = PayloadError.class))),
+            @ApiResponse(responseCode = CODE_500_STRING, description = DESCRIPTION_500, content = @Content(schema = @Schema(implementation = PayloadError.class)))
     })
-    public ResponseEntity<List<ProductModel>> getAll(@RequestHeader("Authorization") String authorization) {
+    public ResponseEntity<List<ProductModel>> getAll(@RequestHeader(AUTHORIZATION) String authorization) {
         var productList = productService.getAll();
         return new ResponseEntity<>(productList, HttpStatus.OK);
     }
@@ -48,12 +56,12 @@ public class ProductController {
     @GetMapping("/{id}")
     @Operation(summary = "Obtém os dados de um produto pelo id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Busca de produto por Id feita com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Erro na requisição", content = @Content(schema = @Schema(implementation = PayloadError.class))),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(schema = @Schema(implementation = PayloadError.class)))
+            @ApiResponse(responseCode = CODE_200_STRING, description = "Busca de produto por Id feita com sucesso"),
+            @ApiResponse(responseCode = CODE_400_STRING, description = DESCRIPTION_400, content = @Content(schema = @Schema(implementation = PayloadError.class))),
+            @ApiResponse(responseCode = CODE_500_STRING, description = DESCRIPTION_500, content = @Content(schema = @Schema(implementation = PayloadError.class)))
     })
     public ResponseEntity<ProductModel> getById(@PathVariable("id") Long id,
-                                                @RequestHeader("Authorization") String authorization) {
+                                                @RequestHeader(AUTHORIZATION) String authorization) {
         var product = productService.getById(id);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
@@ -61,12 +69,12 @@ public class ProductController {
     @GetMapping("/categoria/{categoria}")
     @Operation(summary = "Obtém os dados de um produto pela categoria")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Busca de produto por categoria feita com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Erro na requisição", content = @Content(schema = @Schema(implementation = PayloadError.class))),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(schema = @Schema(implementation = PayloadError.class)))
+            @ApiResponse(responseCode = CODE_200_STRING, description = "Busca de produto por categoria feita com sucesso"),
+            @ApiResponse(responseCode = CODE_400_STRING, description = DESCRIPTION_400, content = @Content(schema = @Schema(implementation = PayloadError.class))),
+            @ApiResponse(responseCode = CODE_500_STRING, description = DESCRIPTION_500, content = @Content(schema = @Schema(implementation = PayloadError.class)))
     })
     public ResponseEntity<List<ProductModel>> getByCategory(@PathVariable("categoria") String categoria,
-                                                            @RequestHeader("Authorization") String authorization) {
+                                                            @RequestHeader(AUTHORIZATION) String authorization) {
         var product = productService.getByCategory(categoria);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
@@ -74,12 +82,12 @@ public class ProductController {
     @PostMapping
     @Operation(summary = "Cadastra um novo produto")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Produto criado com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Erro na requisição", content = @Content(schema = @Schema(implementation = PayloadError.class))),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(schema = @Schema(implementation = PayloadError.class)))
+            @ApiResponse(responseCode = CODE_201_STRING, description = "Produto criado com sucesso"),
+            @ApiResponse(responseCode = CODE_400_STRING, description = DESCRIPTION_400, content = @Content(schema = @Schema(implementation = PayloadError.class))),
+            @ApiResponse(responseCode = CODE_500_STRING, description = DESCRIPTION_500, content = @Content(schema = @Schema(implementation = PayloadError.class)))
     })
     public ResponseEntity<ProductModel> createProduct(@RequestBody ProductModelDto produtoDto,
-                                                      @RequestHeader("Authorization") String authorization) {
+                                                      @RequestHeader(AUTHORIZATION) String authorization) {
         var produtoCriado = productService.create(produtoDto);
         return new ResponseEntity<>(produtoCriado, HttpStatus.CREATED);
     }
@@ -87,12 +95,12 @@ public class ProductController {
     @PutMapping("/{id}")
     @Operation(summary = "Edita um produto a partir de um id")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Edição de produto feita com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Erro na requisição", content = @Content(schema = @Schema(implementation = PayloadError.class))),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(schema = @Schema(implementation = PayloadError.class)))
+            @ApiResponse(responseCode = CODE_201_STRING, description = "Edição de produto feita com sucesso"),
+            @ApiResponse(responseCode = CODE_400_STRING, description = DESCRIPTION_400, content = @Content(schema = @Schema(implementation = PayloadError.class))),
+            @ApiResponse(responseCode = CODE_500_STRING, description = DESCRIPTION_500, content = @Content(schema = @Schema(implementation = PayloadError.class)))
     })
     public ResponseEntity<ProductModel> editById(@PathVariable("id") Long id, @RequestBody ProductModelDto produtoDto,
-                                                 @RequestHeader("Authorization") String authorization){
+                                                 @RequestHeader(AUTHORIZATION) String authorization){
         var produto = productService.editById(id, produtoDto);
         return new ResponseEntity<>(produto, HttpStatus.CREATED);
     }
@@ -101,11 +109,11 @@ public class ProductController {
     @Operation(summary = "Deleta  um produto a partir do id")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Deleção de produto feita com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Erro na requisição", content = @Content(schema = @Schema(implementation = PayloadError.class))),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(schema = @Schema(implementation = PayloadError.class)))
+            @ApiResponse(responseCode = CODE_400_STRING, description = DESCRIPTION_400, content = @Content(schema = @Schema(implementation = PayloadError.class))),
+            @ApiResponse(responseCode = CODE_500_STRING, description = DESCRIPTION_500, content = @Content(schema = @Schema(implementation = PayloadError.class)))
     })
     public ResponseEntity<ProductModel> deleteById(@PathVariable("id") Long id,
-                                                   @RequestHeader("Authorization") String authorization){
+                                                   @RequestHeader(AUTHORIZATION) String authorization){
         productService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

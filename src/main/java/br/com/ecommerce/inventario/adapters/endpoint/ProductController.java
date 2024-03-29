@@ -33,6 +33,18 @@ import java.util.List;
 public class ProductController {
     private final ProductService productService;
 
+    @GetMapping()
+    @Operation(summary = "Obtém todos os produtos do estoque")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Busca de produtos  feita com sucesso"),
+            @ApiResponse(responseCode = "400", description = "Erro na requisição", content = @Content(schema = @Schema(implementation = PayloadError.class))),
+            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(schema = @Schema(implementation = PayloadError.class)))
+    })
+    public ResponseEntity<List<ProductModel>> getAll(@RequestHeader("Authorization") String authorization) {
+        var productList = productService.getAll();
+        return new ResponseEntity<>(productList, HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Obtém os dados de um produto pelo id")
     @ApiResponses(value = {
@@ -42,8 +54,8 @@ public class ProductController {
     })
     public ResponseEntity<ProductModel> getById(@PathVariable("id") Long id,
                                                 @RequestHeader("Authorization") String authorization) {
-        var produto = productService.getById(id);
-        return new ResponseEntity<>(produto, HttpStatus.OK);
+        var product = productService.getById(id);
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
     @GetMapping("/categoria/{categoria}")
@@ -55,8 +67,8 @@ public class ProductController {
     })
     public ResponseEntity<List<ProductModel>> getByCategory(@PathVariable("categoria") String categoria,
                                                             @RequestHeader("Authorization") String authorization) {
-        var produto = productService.getByCategory(categoria);
-        return new ResponseEntity<>(produto, HttpStatus.OK);
+        var product = productService.getByCategory(categoria);
+        return new ResponseEntity<>(product, HttpStatus.OK);
     }
 
     @PostMapping
@@ -82,19 +94,6 @@ public class ProductController {
     public ResponseEntity<ProductModel> editById(@PathVariable("id") Long id, @RequestBody ProductModelDto produtoDto,
                                                  @RequestHeader("Authorization") String authorization){
         var produto = productService.editById(id, produtoDto);
-        return new ResponseEntity<>(produto, HttpStatus.CREATED);
-    }
-
-    @PutMapping("/atualiza-estoque/{id}")
-    @Operation(summary = "Atualiza a quantidade de um produto a partir do id da tabela de movimentações")
-    @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Atualização de estoque feita com sucesso"),
-            @ApiResponse(responseCode = "400", description = "Erro na requisição", content = @Content(schema = @Schema(implementation = PayloadError.class))),
-            @ApiResponse(responseCode = "500", description = "Erro interno do servidor", content = @Content(schema = @Schema(implementation = PayloadError.class)))
-    })
-    public ResponseEntity<ProductModel> editQuantity(@PathVariable("id") Long id,
-                                                    @RequestHeader("Authorization") String authorization){
-        var produto = productService.editQuantity(id);
         return new ResponseEntity<>(produto, HttpStatus.CREATED);
     }
 

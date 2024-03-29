@@ -1,6 +1,5 @@
 package br.com.ecommerce.inventario.usecase.service;
 
-import br.com.ecommerce.inventario.drivers.InOutRepository;
 import br.com.ecommerce.inventario.drivers.ProductRepository;
 import br.com.ecommerce.inventario.entities.dto.ProductModelDto;
 import br.com.ecommerce.inventario.entities.enuns.EnumCategory;
@@ -25,13 +24,11 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class ProductServiceTest {
+class ProductServiceTest {
     @InjectMocks
     ProductServiceImpl productService;
     @Mock
     ProductRepository productRepository;
-    @Mock
-    InOutRepository inOutRepository;
 
     @BeforeEach
     public void setUp() {
@@ -91,13 +88,5 @@ public class ProductServiceTest {
         assertThrows(NotFoundException.class, () -> productService.deleteById(1L));
         verify(productRepository, times(1)).existsById(anyLong());
     }
-
-//    @Test
-//    void testEdit() {
-//        when(productRepository.existsById(anyLong())).thenReturn(false);
-//
-//        assertThrows(NotFoundException.class, () -> productService.deleteById(1L));
-//        verify(productRepository, times(1)).existsById(anyLong());
-//    }
 
 }

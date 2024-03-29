@@ -22,7 +22,7 @@ public class TokenServiceImpl implements TokenService {
         DecodedJWT decode = JWT.decode(actualToken);
 
         if(!decode.getClaim("role").asString().equals("ADMIN")){
-            throw new InvalidTokenException("Token inválido");
+            throw new InvalidTokenException("Usuário sem permissão para acessar o recurso");
         }
     }
 }

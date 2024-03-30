@@ -7,9 +7,13 @@ import br.com.ecommerce.inventario.usecase.impl.ProductServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
@@ -17,6 +21,8 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -33,7 +39,11 @@ class ProductControllerTest {
     @MockBean
     private ProductServiceImpl productService;
 
+    @Mock
+    private Pageable pageable;
+
     List<ProductModel> products = new ArrayList<>();
+    Page<ProductModel> productPage = new PageImpl<>(products);
     ProductModel product = new ProductModel();
 
     ProductModelDto productModelDto = new ProductModelDto();
@@ -60,7 +70,7 @@ class ProductControllerTest {
 
     @Test
     void testGetAll() throws Exception {
-        when(productService.getAll()).thenReturn(products);
+        when(productService.getAll(any(Pageable.class))).thenReturn(productPage);
         mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT_PRODUTO)
                 .contentType(MediaType.APPLICATION_JSON)
                         .header("Authorization", TOKEN)
@@ -80,7 +90,7 @@ class ProductControllerTest {
 
     @Test
     void getByCategory() throws Exception {
-        when(productService.getByCategory("eletronicos")).thenReturn(products);
+        when(productService.getByCategory(anyString(), any(Pageable.class))).thenReturn(productPage);
         mockMvc.perform(MockMvcRequestBuilders.get(ENDPOINT_PRODUTO + "/categoria/ELETRONICOS")
                 .contentType(MediaType.APPLICATION_JSON)
                 .header("Authorization", TOKEN)

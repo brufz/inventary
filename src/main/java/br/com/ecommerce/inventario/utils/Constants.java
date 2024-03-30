@@ -7,7 +7,6 @@ public class Constants {
     public static final String CODE_201_STRING = "201";
     public static final String CODE_400_STRING = "400";
     public static final String CODE_500_STRING = "500";
-
     public static final String MENSAGEM = "mensagem";
     public static final String VALIDACOES = "validacoes";
     public static final String AUTHORIZATION = "Authorization";

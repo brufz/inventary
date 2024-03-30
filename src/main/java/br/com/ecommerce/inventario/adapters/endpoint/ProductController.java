@@ -10,6 +10,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -22,8 +24,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 import static br.com.ecommerce.inventario.utils.Constants.AUTHORIZATION;
 import static br.com.ecommerce.inventario.utils.Constants.CODE_200_STRING;
@@ -48,8 +48,9 @@ public class ProductController {
             @ApiResponse(responseCode = CODE_400_STRING, description = DESCRIPTION_400, content = @Content(schema = @Schema(implementation = PayloadError.class))),
             @ApiResponse(responseCode = CODE_500_STRING, description = DESCRIPTION_500, content = @Content(schema = @Schema(implementation = PayloadError.class)))
     })
-    public ResponseEntity<List<ProductModel>> getAll(@RequestHeader(AUTHORIZATION) String authorization) {
-        var productList = productService.getAll();
+    public ResponseEntity<Page<ProductModel>> getAll(@RequestHeader(AUTHORIZATION) String authorization,
+                                                     Pageable pageable) {
+        var productList = productService.getAll(pageable);
         return new ResponseEntity<>(productList, HttpStatus.OK);
     }
 
@@ -73,9 +74,10 @@ public class ProductController {
             @ApiResponse(responseCode = CODE_400_STRING, description = DESCRIPTION_400, content = @Content(schema = @Schema(implementation = PayloadError.class))),
             @ApiResponse(responseCode = CODE_500_STRING, description = DESCRIPTION_500, content = @Content(schema = @Schema(implementation = PayloadError.class)))
     })
-    public ResponseEntity<List<ProductModel>> getByCategory(@PathVariable("categoria") String categoria,
-                                                            @RequestHeader(AUTHORIZATION) String authorization) {
-        var product = productService.getByCategory(categoria);
+    public ResponseEntity<Page<ProductModel>> getByCategory(@PathVariable("categoria") String categoria,
+                                                            @RequestHeader(AUTHORIZATION) String authorization,
+                                                            Pageable pageable) {
+        var product = productService.getByCategory(categoria, pageable);
         return new ResponseEntity<>(product, HttpStatus.OK);
     }
 

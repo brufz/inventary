@@ -11,6 +11,9 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -30,6 +34,8 @@ class ProductServiceTest {
     @Mock
     ProductRepository productRepository;
 
+    @Mock
+    private Pageable pageable;
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
@@ -64,12 +70,13 @@ class ProductServiceTest {
         List<ProductModel> productModel = new ArrayList<>();
         ProductModel pm1 = new ProductModel(1L, "Produto 1", "ELETRONICOS", EnumCategory.ELETRONICOS, 100.0, 10);
         productModel.add(pm1);
-        when(productRepository.findByCategory(any())).thenReturn(productModel);
+        Page<ProductModel> pagedList = new PageImpl<>(productModel);
+        when(productRepository.findByCategory(any(EnumCategory.class), any(Pageable.class))).thenReturn(pagedList);
 
-        List<ProductModel> result = productService.getByCategory("ELETRONICOS");
+        Page<ProductModel> result = productService.getByCategory("ELETRONICOS", pageable);
 
-        assertEquals(productModel, result);
-        verify(productRepository, times(1)).findByCategory(any());
+        assertEquals(pagedList, result);
+        verify(productRepository, times(1)).findByCategory(any(), any());
     }
 
     @Test

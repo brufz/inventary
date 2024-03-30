@@ -8,9 +8,10 @@ import br.com.ecommerce.inventario.usecase.ProductService;
 import br.com.ecommerce.inventario.usecase.exception.NotFoundException;
 import br.com.ecommerce.inventario.usecase.mapper.ProductMapper;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -30,14 +31,14 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductModel> getAll() {
-        return productRepository.findAll();
+    public Page<ProductModel> getAll(Pageable pageable) {
+        return (productRepository.findAll(pageable));
     }
 
     @Override
-    public List<ProductModel> getByCategory(String categoria) {
+    public Page<ProductModel> getByCategory(String categoria, Pageable pageable){
         EnumCategory enumCategory = EnumCategory.getCategory(categoria);
-        return Optional.ofNullable(productRepository.findByCategory(enumCategory))
+        return Optional.ofNullable(productRepository.findByCategory(enumCategory, pageable))
                 .filter(list -> !list.isEmpty())
                 .orElseThrow(() -> new NotFoundException("Nenhum produto encontrado na categoria " + categoria));
     }

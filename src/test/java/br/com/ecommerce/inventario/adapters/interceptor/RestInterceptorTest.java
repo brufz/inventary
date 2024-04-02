@@ -35,7 +35,7 @@ class RestInterceptorTest {
         String token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJyb2xlIjoiQURNSU4iLCJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.yCdPVMPz5eIv_oZ4Js08DhLE4BoOuuXLOnKm6YIsN6A";
         when(request.getHeader("Authorization")).thenReturn(token);
         restInterceptor.preHandle(request, response, null);
-        verify(tokenService).validateToken(token);
+        verify(tokenService).validateToken(token, false);
      }
 
 }

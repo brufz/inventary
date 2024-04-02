@@ -14,6 +14,9 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import static br.com.ecommerce.inventario.utils.Constants.NOT_BLANK_MESSAGE;
+import static br.com.ecommerce.inventario.utils.Constants.NOT_NULL_MESSAGE;
+
 @Builder
 @Entity
 @Data
@@ -24,19 +27,19 @@ public class ProductModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @NotBlank
+    @NotBlank(message = NOT_BLANK_MESSAGE)
     @JsonProperty("nome")
     private String name;
-    @NotBlank
+    @NotBlank(message = NOT_BLANK_MESSAGE)
     @JsonProperty("descricao")
     private String description;
-    @NotNull
+    @NotNull(message = NOT_NULL_MESSAGE)
     @JsonProperty("categoria")
     private EnumCategory category;
-    @NotNull
+    @NotNull(message = NOT_NULL_MESSAGE)
     @JsonProperty("preco")
     private Double price;
-    @NotNull
+    @NotNull(message = NOT_NULL_MESSAGE)
     @JsonProperty("quantidade")
     private Integer quantity;
 }

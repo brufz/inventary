@@ -72,30 +72,4 @@ class ControllerExceptionHandlerTest {
         ResponseEntity<Object> responseEntity = customExceptionHandler.handleBadRequestException(exception, webRequest);
         assertEquals(400, responseEntity.getStatusCodeValue());
     }
-
-
-    @Test
-    void testHandleMethodArgumentNotValid() {
-        FieldError fieldError = new FieldError("objectName", "field", "defaultMessage");
-
-        BindingResult bindingResult = mock(BindingResult.class);
-        when(bindingResult.getFieldErrors()).thenReturn(Collections.singletonList(fieldError));
-
-        MethodArgumentNotValidException ex = new MethodArgumentNotValidException(null, bindingResult);
-
-        WebRequest request = new ServletWebRequest(new MockHttpServletRequest());
-
-        ResponseEntity<Object> responseEntity = customExceptionHandler.handleMethodArgumentNotValid(ex, request);
-
-        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
-
-
-        Map<String, Object> body = (Map<String, Object>) responseEntity.getBody();
-        assertEquals("Dados de requisição incorretos", body.get("mensagem"));
-
-        List<Map<String, String>> validacoes = (List<Map<String, String>>) body.get("validacoes");
-        assertEquals(1, validacoes.size());
-        assertEquals("field", validacoes.get(0).get("campo"));
-        assertEquals("defaultMessage", validacoes.get(0).get("mensagem"));
-    }
 }

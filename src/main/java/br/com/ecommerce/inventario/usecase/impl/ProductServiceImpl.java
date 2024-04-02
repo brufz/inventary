@@ -17,6 +17,7 @@ import java.util.Optional;
 @Service
 @RequiredArgsConstructor
 public class ProductServiceImpl implements ProductService {
+    public static final String NOT_FOUND_MESSAGE = "Produto não encontrado. Id: ";
     private final ProductRepository productRepository;
 
     @Override
@@ -27,7 +28,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductModel getById(Long id) {
-        return productRepository.findById(id).orElseThrow(() -> new NotFoundException("Produto com id " + id + " não encontrado"));
+        return productRepository.findById(id).orElseThrow(() -> new NotFoundException(NOT_FOUND_MESSAGE + id));
     }
 
     @Override
@@ -55,13 +56,13 @@ public class ProductServiceImpl implements ProductService {
                     .build();
             return productRepository.save(productById);
         }
-        throw new NotFoundException("Produto com id " + id + " não encontrado");
+        throw new NotFoundException(NOT_FOUND_MESSAGE + id);
     }
 
     @Override
     public void deleteById(Long id) {
         if (!productRepository.existsById(id)) {
-            throw new NotFoundException("Produto com id " + id + " não encontrado");
+            throw new NotFoundException(NOT_FOUND_MESSAGE + id);
         }
         productRepository.deleteById(id);
     }

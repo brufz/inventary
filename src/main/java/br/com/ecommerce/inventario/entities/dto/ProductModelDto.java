@@ -8,25 +8,28 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import static br.com.ecommerce.inventario.utils.Constants.NOT_BLANK_MESSAGE;
+import static br.com.ecommerce.inventario.utils.Constants.NOT_NULL_MESSAGE;
+
 
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
 @Data
 public class ProductModelDto {
-    @NotBlank
+    @NotBlank(message = NOT_BLANK_MESSAGE)
     @JsonProperty("nome")
     private String name;
-    @NotBlank
+    @NotBlank(message = NOT_BLANK_MESSAGE)
     @JsonProperty("descricao")
     private String description;
-    @NotBlank
+    @NotBlank(message = NOT_BLANK_MESSAGE)
     @JsonProperty("categoria")
     private String category;
-    @NotNull
+    @NotNull(message = NOT_NULL_MESSAGE)
     @JsonProperty("preco")
     private Double price;
-    @NotNull
+    @NotNull(message = NOT_NULL_MESSAGE)
     @JsonProperty("quantidade")
     private Integer quantity;
 

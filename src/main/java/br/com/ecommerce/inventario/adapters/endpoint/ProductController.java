@@ -9,7 +9,9 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -37,6 +39,7 @@ import static br.com.ecommerce.inventario.utils.Constants.DESCRIPTION_500;
 @RequestMapping(value = "/produto", produces = "application/json", headers = "Accept=*/*")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*", allowedHeaders = "*")
+@Slf4j
 public class ProductController {
 
     private final ProductService productService;
@@ -88,7 +91,7 @@ public class ProductController {
             @ApiResponse(responseCode = CODE_400_STRING, description = DESCRIPTION_400, content = @Content(schema = @Schema(implementation = PayloadError.class))),
             @ApiResponse(responseCode = CODE_500_STRING, description = DESCRIPTION_500, content = @Content(schema = @Schema(implementation = PayloadError.class)))
     })
-    public ResponseEntity<ProductModel> createProduct(@RequestBody ProductModelDto produtoDto,
+    public ResponseEntity<ProductModel> createProduct(@RequestBody @Valid ProductModelDto produtoDto,
                                                       @RequestHeader(AUTHORIZATION) String authorization) {
         var produtoCriado = productService.create(produtoDto);
         return new ResponseEntity<>(produtoCriado, HttpStatus.CREATED);
@@ -101,7 +104,8 @@ public class ProductController {
             @ApiResponse(responseCode = CODE_400_STRING, description = DESCRIPTION_400, content = @Content(schema = @Schema(implementation = PayloadError.class))),
             @ApiResponse(responseCode = CODE_500_STRING, description = DESCRIPTION_500, content = @Content(schema = @Schema(implementation = PayloadError.class)))
     })
-    public ResponseEntity<ProductModel> editById(@PathVariable("id") Long id, @RequestBody ProductModelDto produtoDto,
+    public ResponseEntity<ProductModel> editById(@PathVariable("id") Long id,
+                                                 @RequestBody @Valid ProductModelDto produtoDto,
                                                  @RequestHeader(AUTHORIZATION) String authorization){
         var produto = productService.editById(id, produtoDto);
         return new ResponseEntity<>(produto, HttpStatus.CREATED);
